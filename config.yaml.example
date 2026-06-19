@@ -1,0 +1,43 @@
+# レポート生成エージェント 設定ファイル例
+# 使い方: cp config.yaml.example config.yaml して編集し、--config config.yaml で渡す。
+# ここでの設定は CLI 引数で上書きできます(CLI 引数が最優先)。
+
+llm:
+  # 接続先プリセット: llama.cpp / lmstudio / custom
+  provider: llama.cpp
+  # base_url を明示すると provider プリセットより優先されます。
+  #   llama.cpp:  http://127.0.0.1:8080/v1
+  #   LM Studio:  http://localhost:1234/v1
+  base_url: ""
+  api_key: not-needed       # ローカルサーバは通常不要
+  model: local-model        # LM Studio はロード中モデル名、llama.cpp は任意
+  temperature: 0.3
+  timeout_sec: 300
+  max_retries: 3
+
+generation:
+  # reasoning(思考)型モデル(GLM / Qwen3 等)は回答前に思考トークンを使うため
+  # max_tokens は大きめに。非思考モデルなら小さくしてよい。
+  outline_max_tokens: 2500
+  chapter_max_tokens: 3000    # 章本文 + 思考分の上限
+  review_max_tokens: 1500
+  chapter_target_chars: 1000  # 章ごとの目標文字数(800〜1500推奨)
+
+search:
+  enabled: true
+  searxng_url: http://localhost:8888  # 自前/公開 SearXNG インスタンス
+  max_results: 8
+  max_images: 6
+  language: ja
+  timeout_sec: 30
+  # 鮮度フィルタ(SearXNG time_range): day / week / month / year
+  # 既定では news は news_time_range、それ以外はフィルタなし。
+  # 下行を有効化すると常に固定(空文字 "" で常時オフ)。CLI の --time-range が最優先(off で無効化)。
+  # time_range: month
+  news_time_range: month   # news ダイジェストの既定鮮度(直近1ヶ月)
+
+report:
+  type: research        # research / news / comparison / proposal / tech
+  audience: business    # business / consumer(一般消費者向け製品ニュース) / engineer / beginner
+  length: 5000          # 目標総文字数
+  title: ""             # 空ならキーワードから自動生成

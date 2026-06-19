@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+# ラッパー: venv の python で CLI を起動する。
+set -euo pipefail
+HERE="$(cd "$(dirname "$0")" && pwd)"
+PY="$HERE/.venv/bin/python"
+if [[ ! -x "$PY" ]]; then
+  PY="$(command -v python3)"
+fi
+exec "$PY" -m report_agent "$@"

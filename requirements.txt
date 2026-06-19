@@ -1,0 +1,5 @@
+requests>=2.31
+PyYAML>=6.0
+markdown>=3.5
+weasyprint>=60   # PDF 出力(--format pdf/all)。画像を埋め込んだスマホ向けPDFを生成
+Pillow>=10       # PDF 埋め込み画像の縮小(ファイルサイズ削減)
