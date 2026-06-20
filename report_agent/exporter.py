@@ -183,17 +183,8 @@ def build_news_html(
         for i, c in enumerate(categories)
     )
 
-    gallery = ""
-    if images:
-        figs = "\n".join(
-            f'<figure><a href="{html.escape(im.source_url or im.img_src)}" target="_blank" rel="noopener">'
-            f'<img src="{html.escape(im.img_src)}" alt="{html.escape(im.title)}" loading="lazy" '
-            f'onerror="this.closest(\'figure\').style.display=\'none\'"></a>'
-            f'<figcaption>{html.escape(im.title)}</figcaption></figure>'
-            for im in images
-        )
-        gallery = f'<div class="gallery">\n{figs}\n</div>'
-
+    # 先頭の関連画像ギャラリーは付けない(各ニュースに個別サムネがあり、
+    # ファーストビューを占有してしまうため)。images 引数は後方互換で受けるが未使用。
     from urllib.parse import urlparse
 
     def _favicon(u: str) -> str:
@@ -247,7 +238,6 @@ def build_news_html(
 {_brand_header()}
 <h1>{html.escape(title)}</h1>
 <p class="meta">キーワード: {html.escape(keyword)} ／ 生成日: {today} ／ 全 {total} 件</p>
-{gallery}
 <nav class="toc"><strong>カテゴリ</strong>
 <ul>
 {toc}
@@ -300,17 +290,8 @@ def build_html(
         for ch in chapters
     )
 
-    # 画像ギャラリー
-    gallery = ""
-    if images:
-        figs = "\n".join(
-            f'<figure><a href="{html.escape(im.source_url or im.img_src)}" target="_blank" rel="noopener">'
-            f'<img src="{html.escape(im.img_src)}" alt="{html.escape(im.title)}" loading="lazy" '
-            f'onerror="this.closest(\'figure\').style.display=\'none\'"></a>'
-            f'<figcaption>{html.escape(im.title)}</figcaption></figure>'
-            for im in images
-        )
-        gallery = f'<h2>関連画像</h2>\n<div class="gallery">\n{figs}\n</div>'
+    # 関連画像ギャラリーは付けない(ファーストビューを占有するため)。
+    # images 引数は後方互換で受けるが未使用。
 
     # 本文(各章 Markdown -> HTML, 引用をリンク化)
     body_parts = []
@@ -353,7 +334,6 @@ def build_html(
 {toc_items}
 </ol>
 </nav>
-{gallery}
 {body_html}
 {sources_html}
 <footer>本レポートはローカル LLM により自動生成されました。内容は必ず原典で確認してください。</footer>
